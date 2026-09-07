@@ -1,12 +1,20 @@
+# Lo que no se indexa: la base de jugadores y el JS del build. El resto del sitio
+# (draft, carrera, páginas de intención, /en/, /pt/) tiene que poder entrar: el 87 %
+# del tráfico es búsqueda y las puertas que no son la marca viven fuera de /draft.
 User-agent: *
-Allow: /$
-Allow: /draft
-Allow: /carrera
-Allow: /ruleta
-Allow: /records
-Allow: /leaderboard
-# No indexar/scrapear la base de datos ni los internals
+Allow: /
 Disallow: /data/
 Disallow: /_next/
+
+# Búsqueda con IA: que nos citen. El entrenamiento (GPTBot, Google-Extended, ClaudeBot)
+# lo corta Cloudflare con el bloque administrado; acá no se toca eso.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
 
 Sitemap: https://gambetafutbol.games/sitemap.xml

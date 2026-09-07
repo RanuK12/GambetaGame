@@ -79,4 +79,12 @@ describe('las páginas de intención de búsqueda', () => {
       expect(desc!.length).toBeGreaterThan(80)
     }
   })
+
+  it('el home enlaza las páginas de intención, o Google no las encuentra', () => {
+    const home = fuente('app/page.tsx')
+    expect(home).toContain('/juegos-de-futbol-argentino/')
+    expect(home).toContain('/juegos-como-copero/')
+    expect(home).toContain('/football-draft-game/')
+    expect(home).toContain('/monte-seu-time/')
+  })
 })

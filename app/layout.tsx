@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   // portuguesa como copias de la castellana y elige una sola.
   alternates: {
     canonical: '/',
-    languages: { es: '/', en: '/en', 'pt-BR': '/pt' },
+    languages: { es: '/', en: '/en', 'pt-BR': '/pt', 'x-default': '/' },
   },
   openGraph: {
     title: 'Gambeta ⚽ El Juego del Fútbol Argentino',
@@ -83,6 +83,7 @@ export const metadata: Metadata = {
   twitter: {
     // `summary` muestra una miniatura al costado; `summary_large_image` ocupa el ancho del tweet.
     card: 'summary_large_image',
+    site: '@GambetafutbolAR',
     title: 'Gambeta ⚽ El Juego del Fútbol Argentino',
     description: 'Armá tu 11 ideal, viví tu carrera y competí por el ranking.',
     images: ['/social/og.png'],
@@ -111,6 +112,7 @@ const DATOS_ESTRUCTURADOS = {
       '@id': 'https://gambetafutbol.games/#editor',
       name: 'Ranuk IT Solutions',
       url: 'https://ranuk.dev',
+      sameAs: ['https://x.com/GambetafutbolAR', 'https://ranuk.dev'],
     },
     {
       '@type': 'VideoGame',

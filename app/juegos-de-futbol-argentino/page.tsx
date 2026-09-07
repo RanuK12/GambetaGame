@@ -24,6 +24,35 @@ const LIGAS_ARG = (ligasData as { ligas: { id: string; pais: string; nombre: str
   .sort((a, b) => ORDEN_ARG.indexOf(a.id) - ORDEN_ARG.indexOf(b.id))
   .map((l) => l.nombre)
 
+const PREGUNTAS = [
+  {
+    q: '¿Hay que descargar algo?',
+    a: 'No. Corre en el navegador, en la computadora y en el teléfono.',
+  },
+  {
+    q: '¿Hay que registrarse?',
+    a: 'No hace falta. La cuenta sirve solo si querés que tu ELO cuente en el ranking global; todo lo demás se juega igual sin ella, y la partida se guarda en tu navegador.',
+  },
+  {
+    q: '¿Es gratis?',
+    a: 'Sí, entero y gratis. Se banca con publicidad y donaciones, sin nada pago adentro del juego.',
+  },
+  {
+    q: '¿De dónde salen los jugadores?',
+    a: `De planteles reales. Cada jugador de los ${HISTORICOS} planteles históricos está cruzado contra tres fuentes antes de entrar: no hay ninguno inventado.`,
+  },
+]
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: PREGUNTAS.map((p) => ({
+    '@type': 'Question',
+    name: p.q,
+    acceptedAnswer: { '@type': 'Answer', text: p.a },
+  })),
+}
+
 const MODOS = [
   {
     href: '/draft/',
@@ -60,6 +89,10 @@ const MODOS = [
 export default function JuegosDeFutbolArgentino() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <header className="text-center">
         <p className="font-sport text-[11px] font-black uppercase tracking-[0.3em] text-[#74ACDF]">
           Gratis · en el navegador · sin registro
@@ -123,34 +156,12 @@ export default function JuegosDeFutbolArgentino() {
       <section className="mt-12">
         <h2 className="font-display text-2xl font-black uppercase text-white">Preguntas</h2>
         <dl className="mt-4 space-y-4">
-          <div>
-            <dt className="font-display text-base font-black text-white">¿Hay que descargar algo?</dt>
-            <dd className="mt-1 font-sans text-[14px] leading-relaxed text-slate-300">
-              No. Corre en el navegador, en la computadora y en el teléfono.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-display text-base font-black text-white">¿Hay que registrarse?</dt>
-            <dd className="mt-1 font-sans text-[14px] leading-relaxed text-slate-300">
-              No hace falta. La cuenta sirve solo si querés que tu ELO cuente en el ranking global;
-              todo lo demás se juega igual sin ella, y la partida se guarda en tu navegador.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-display text-base font-black text-white">¿Es gratis?</dt>
-            <dd className="mt-1 font-sans text-[14px] leading-relaxed text-slate-300">
-              Sí, entero y gratis. Se banca con publicidad y donaciones, sin nada pago adentro del juego.
-            </dd>
-          </div>
-          <div>
-            <dt className="font-display text-base font-black text-white">
-              ¿De dónde salen los jugadores?
-            </dt>
-            <dd className="mt-1 font-sans text-[14px] leading-relaxed text-slate-300">
-              De planteles reales. Cada jugador de los {HISTORICOS} planteles históricos está
-              cruzado contra tres fuentes antes de entrar: no hay ninguno inventado.
-            </dd>
-          </div>
+          {PREGUNTAS.map((p) => (
+            <div key={p.q}>
+              <dt className="font-display text-base font-black text-white">{p.q}</dt>
+              <dd className="mt-1 font-sans text-[14px] leading-relaxed text-slate-300">{p.a}</dd>
+            </div>
+          ))}
         </dl>
       </section>
 

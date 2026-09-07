@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { trackEvent, EVENTOS } from "@/components/Analytics"
 import { motion } from "framer-motion"
-import { mpAlias, mpTiers } from "@/lib/donations"
+import { mpAlias, mpTiers, stripeTiers } from "@/lib/donations"
 import { useEmbebido } from "@/lib/embebido"
 
 export default function DonationSection({ compacta = false }: { compacta?: boolean } = {}) {
@@ -98,6 +98,38 @@ export default function DonationSection({ compacta = false }: { compacta?: boole
           })}
         </div>
 
+        {/* STRIPE — tarjeta internacional, monto accesible */}
+        <div className="mt-6 relative">
+          <p className="mb-3 text-center text-[11px] text-slate-500 font-sans">
+            Desde afuera de Argentina, con tarjeta
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            {stripeTiers.map((t) => (
+              <motion.a
+                key={t.link}
+                href={t.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent(EVENTOS.donacionClick, { via: "stripe", monto: t.eur, moneda: "EUR" })}
+                whileHover={{ y: -4 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="sm:col-start-2 group relative flex flex-col items-center text-center rounded-2xl p-5 border bg-gradient-to-b from-sky-400/15 to-slate-950/40 border-sky-400/40 hover:border-sky-300/60 shadow-[0_0_30px_rgba(116,172,223,0.10)]"
+              >
+                <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">{t.emoji}</span>
+                <span className="font-display text-2xl font-black text-white leading-none">
+                  €{t.eur}
+                </span>
+                <span className="text-[10px] font-sport text-slate-500 uppercase tracking-wider mt-0.5">EUR</span>
+                <span className="text-sm font-bold text-white font-sport uppercase tracking-wide mt-2.5">{t.label}</span>
+                <span className="text-[11px] text-slate-400 leading-snug mt-1">{t.sub}</span>
+                <span className="mt-4 w-full py-2.5 rounded-xl text-[11px] font-bold font-sport uppercase tracking-widest bg-sky-400 text-slate-950 group-hover:bg-sky-300 transition-colors">
+                  Donar con tarjeta
+                </span>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+
         {/* ALIAS + TRUST */}
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
           <span className="text-[11px] text-slate-500 font-sans">o transferí al alias</span>
@@ -112,7 +144,7 @@ export default function DonationSection({ compacta = false }: { compacta?: boole
           </button>
         </div>
         <p className="mt-4 text-center text-[10px] text-slate-600 font-sport uppercase tracking-wider">
-          🔒 Pago protegido con Mercado Pago
+          Pago protegido con Mercado Pago · Stripe
         </p>
       </motion.div>
     </section>

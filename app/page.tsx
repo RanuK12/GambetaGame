@@ -680,12 +680,22 @@ export default function HomePage() {
 
       {/* ── EXTRA LINKS ── */}
       <section className="relative z-10 max-w-6xl mx-auto px-4 pb-16">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[
             { href: '/como-jugar', title: t('extra.comoJugar.titulo', 'CÓMO SE JUEGA'), text: t('extra.comoJugar.texto', 'Aprendé el flujo del draft, las posiciones y la simulación táctica.'), color: 'border-slate-900 hover:border-slate-800' },
             { href: '/records', title: t('extra.records.titulo', 'RECORDS HISTÓRICOS'), text: t('extra.records.texto', 'Consulta el ranking de mejores puntuaciones y leyendas de la liga.'), color: 'border-slate-900 hover:border-slate-800' },
             { href: '/daily', title: t('extra.daily.titulo', 'RETO DIARIO'), text: t('extra.daily.texto', 'Competí en el desafío de simulación del día en igualdad de condiciones.'), color: 'border-slate-900 hover:border-slate-800' },
             { href: '/datos', title: t('extra.datos.titulo', '¿SABÍAS QUE?'), text: t('extra.datos.texto', 'Tirá el dado y sacá un dato del fútbol argentino y del mundo. Ninguno inventado.'), color: 'border-slate-900 hover:border-slate-800' },
+            // Las páginas de intención solo existen (y rankean) en su idioma. En castellano
+            // son la apuesta a que Google deje de devolver solo la marca.
+            ...(locale === 'es'
+              ? [
+                  { href: '/juegos-de-futbol-argentino/', title: 'JUEGOS DE FÚTBOL ARGENTINO', text: 'Gratis, en el navegador y sin descargar: draft, carrera, reto diario y ranking.', color: 'border-slate-900 hover:border-slate-800' },
+                  { href: '/juegos-como-copero/', title: 'JUEGOS COMO COPERO', text: 'Si ya jugaste Copero o El Ídolo: acá el draft es con planteles reales de acá.', color: 'border-slate-900 hover:border-slate-800' },
+                ]
+              : locale === 'en'
+                ? [{ href: '/football-draft-game/', title: 'FOOTBALL DRAFT GAME', text: 'Build your XI from real Argentine squads. Free, in the browser, no sign-up.', color: 'border-slate-900 hover:border-slate-800' }]
+                : [{ href: '/monte-seu-time/', title: 'MONTE SEU TIME', text: 'Escale um onze com elencos reais do futebol argentino. Grátis, no navegador.', color: 'border-slate-900 hover:border-slate-800' }]),
           ].map((item, i) => (
             <motion.div
               key={item.href}
@@ -764,6 +774,7 @@ export default function HomePage() {
                 { href: '/draft?mode=liga', label: 'LIGA' },
                 { href: '/draft?mode=copa', label: 'COPA' },
                 { href: '/records', label: 'RECORDS' },
+                { href: '#apoyar', label: 'APOYAR' },
               ].map(l => (
                 <Link key={l.href} href={l.href}
                   className="text-[#74ACDF]/40 hover:text-[#74ACDF] text-[11px] font-bold tracking-widest font-sport transition-colors">
