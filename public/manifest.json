@@ -2,7 +2,7 @@
   "name": "Gambeta - El Juego del Fútbol Argentino",
   "short_name": "Gambeta",
   "description": "Armá tu 11 ideal, viví tu carrera de crack y competí por el ranking.",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa&utm_medium=app",
   "display": "standalone",
   "background_color": "#020813",
   "theme_color": "#020813",

@@ -252,6 +252,17 @@ export default function ShareBar({
           {texto}
         </p>
 
+        {imagen && (
+          <button
+            type="button"
+            onClick={compartirHistoria}
+            disabled={estado === "generando"}
+            className="btn-primary mt-4 w-full rounded-2xl px-6 py-3.5 font-sport text-[12px] font-black uppercase tracking-widest disabled:opacity-60"
+          >
+            {estado === "generando" ? "Preparando la ficha…" : "Compartir con la ficha"}
+          </button>
+        )}
+
         <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <a
             href={xUrl}

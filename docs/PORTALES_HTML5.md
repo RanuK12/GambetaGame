@@ -33,10 +33,11 @@ ELO local, pero **se juega igual**.
 | **CrazyGames** | El más grande de habla hispana para juegos de navegador. Tiene sección de deportes y de "juegos .io" con mucho tráfico latino | Alta de desarrollador, el juego servido por HTTPS, 1 icono, capturas, descripción |
 | **Poki** | Volumen enorme, muy curado. Suelen pedir métricas de retención antes de aceptar | Formulario de envío. Conviene mandarlo **después** de tener los números del reto diario |
 | **itch.io** | Acepta a todo el mundo, no filtra. Sirve para tener presencia y un link con autoridad | Cuenta y subir un zip o apuntar a la URL |
-| **GameDistribution** | Distribuye a miles de sitios chicos de golpe | Alta y aceptar su SDK de anuncios (**ojo**: hoy el juego no tiene publicidad; esto habría que decidirlo) |
+| **GameDistribution** | Distribuye a miles de sitios chicos de golpe | Alta. El sitio ya tiene AdSense y apaga los avisos propios dentro del iframe (`lib/embebido.ts`) |
 
-Empezar por **itch.io** (entra seguro, sirve de prueba) y **CrazyGames** (es el que mueve la
-aguja). Poki cuando el reto diario tenga un mes de datos.
+Empezar por **itch.io** (ya publicado) y **CrazyGames** (es el que mueve la aguja). Poki y
+GameDistribution con la misma ficha. La URL que se embebe es `/play/` (el draft, no el home):
+el portal mide el tiempo hasta que se puede jugar.
 
 ## 3. La ficha, escrita
 

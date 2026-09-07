@@ -1,0 +1,14 @@
+# Gambeta
+
+Gambeta is a free browser game about Argentine football: a draft with real historical squads (1994–today), a 15-season player career from the fourth division up, a daily challenge with the same draw for everyone, and an ELO ranking.
+
+Play: https://gambetafutbol.games/
+Draft: https://gambetafutbol.games/draft/
+Career: https://gambetafutbol.games/carrera/
+Daily challenge: https://gambetafutbol.games/daily/
+Spanish discovery: https://gambetafutbol.games/juegos-de-futbol-argentino/
+Like Copero / El Ídolo: https://gambetafutbol.games/juegos-como-copero/
+English: https://gambetafutbol.games/en/football-draft-game/
+Portuguese: https://gambetafutbol.games/pt/monte-seu-time/
+
+No download, no required account, nothing paid inside the game.

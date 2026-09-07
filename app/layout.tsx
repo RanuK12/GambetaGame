@@ -8,6 +8,7 @@ import AuthModal from '@/components/AuthModal'
 import UserProfileModal from '@/components/UserProfileModal'
 import Analytics from '@/components/Analytics'
 import Ads from '@/components/Ads'
+import PwaRoot from '@/components/PwaRoot'
 
 // Sora: tipografía moderna, geométrica y premium para títulos y displays
 const sora = Sora({
@@ -146,6 +147,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         <link rel="icon" href="/logos/gambeta.svg" />
+        <link rel="apple-touch-icon" href="/logos/gambeta-192.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(DATOS_ESTRUCTURADOS) }}
@@ -161,6 +163,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <UserProfileModal />
         <Analytics />
         <Ads />
+        <PwaRoot />
       </body>
     </html>
   )

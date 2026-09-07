@@ -48,6 +48,8 @@ import { getPC, POS_GROUPS } from "@/lib/ui-constants"
 import MagneticButton from "@/components/ui/MagneticButton"
 import EventBurst, { type BurstTone } from "@/components/ui/EventBurst"
 import { useT, usePuesto, useReto } from "@/lib/i18n"
+import { mulberry32, seedDesdeTexto, codigoNuevo } from "@/lib/prng"
+import CopiarDesafio from "@/components/CopiarDesafio"
 
 /* ═══════════════════════════════════════════════════════════════
    CONSTANTS & HELPERS
@@ -187,6 +189,16 @@ function DraftInner() {
   const mode = GAME_MODES[modeId] || GAME_MODES.clasico
   // Si venís del Reto Diario, terminar el torneo suma ELO extra (una vez por día).
   const retoId = sp.get("reto")
+  // Link de un club: las páginas de equipos ya lo pegan, pero el draft lo ignoraba y el
+  // hincha caía al bombo entero. Con `club` el sorteo sale de ese club.
+  const clubId = sp.get("club")
+  // Mismo bombo para un stream y su chat: el seed fija el sorteo de planteles.
+  const seedParam = sp.get("seed")
+  const azar = useMemo(
+    () => (seedParam ? mulberry32(seedDesdeTexto(seedParam)) : Math.random),
+    [seedParam],
+  )
+  const seedParaChat = useMemo(() => seedParam || codigoNuevo(), [seedParam])
 
   const { players: playersCore, error: playersError } = usePlayersCore()
     // ── EL RETO DIARIO FILTRA EL BOMBO DE VERDAD ──
@@ -207,7 +219,12 @@ function DraftInner() {
     return filtrados.length >= 60 ? filtrados : base
   }, [playersCore, retoDelDia])
   const { squads: squadsCore, error: squadsError } = useSquads()
-  const allS = squadsCore ?? []
+  const allS = useMemo(() => {
+    const base = squadsCore ?? []
+    if (!clubId) return base
+    const filtrados = base.filter((s) => s.clubId === clubId)
+    return filtrados.length > 0 ? filtrados : base
+  }, [squadsCore, clubId])
   // El bombo necesita las dos cosas: sin planteles, un giro no tiene de dónde sacar jugadores.
   const datosListos = Boolean(playersCore && squadsCore)
   const { user, updateElo, addTitle, otorgarPlaza, usarPlaza } = useUserStore()
@@ -357,14 +374,14 @@ function DraftInner() {
       return
     }
     // Apply pity system (incluye la chance de que salga un plantel con estrella para el puesto)
-    const result = spinSquadWithPity(eligible, allP, pity, { position: posToUse, drafted: draftedIds }, clubesUsados)
+    const result = spinSquadWithPity(eligible, allP, pity, { position: posToUse, drafted: draftedIds }, clubesUsados, azar)
     setSpinNotice(null)
     setCurrentSquad(result)
     setClubesUsados(prev => new Set(prev).add(result.clubId))
     tocar("giro")
     setSpinning(true)
     setPhase("spinning")
-  }, [spinning, allS, allP, currentPos.pos, draftedIds, pity, f, drafted, clubesUsados])
+  }, [spinning, allS, allP, currentPos.pos, draftedIds, pity, f, drafted, clubesUsados, azar])
 
   // ── REROLL ──
   const rerollTeam = useCallback(() => {
@@ -430,7 +447,7 @@ function DraftInner() {
       // Mismo bombo que el giro manual: solo planteles que tengan a alguien para ese puesto.
       const elegibles = getEligibleSquadsForSlot(allS, allP, slot.pos, ids)
       if (elegibles.length === 0) return
-      const sq = spinSquadWithPity(elegibles, allP, pity, { position: slot.pos, drafted: ids }, clubesUsados)
+      const sq = spinSquadWithPity(elegibles, allP, pity, { position: slot.pos, drafted: ids }, clubesUsados, azar)
       clubesUsados.add(sq.clubId)
       const mejor = allP
         .filter(pl => sq.playerIds.includes(pl.id) && !ids.has(pl.id) && canPlayHere(pl, slot.pos))
@@ -456,7 +473,7 @@ function DraftInner() {
       autocompletado: sumados,
       via: "express",
     })
-  }, [drafted, draftedIds, allS, allP, f, pity, clubesUsados])
+  }, [drafted, draftedIds, allS, allP, f, pity, clubesUsados, azar])
 
   // ── SLOT CLICK ──
   const handleSlotClick = useCallback((idx: number) => {
@@ -633,6 +650,16 @@ function DraftInner() {
           <img src="/logos/afa.png" alt="AFA" className="h-20 w-auto object-contain mx-auto block mb-6 opacity-80" />
           <h1 className="font-display text-4xl md:text-5xl font-black gradient-text mb-4">{t('draft.ligaArgentinaFans', 'Liga Argentina Fans')}</h1>
           <p className="text-slate-400 mb-6">{mode.icon} {mode.name}</p>
+          {clubId && allS.length > 0 && (
+            <p className="mb-4 rounded-2xl border border-[#74ACDF]/30 bg-[#74ACDF]/10 px-4 py-2 font-sport text-[11px] font-black uppercase tracking-widest text-[#9CCBF0]">
+              Bombo de {allS[0].label.replace(/\s+\d{4}.*$/, '') || clubId}
+            </p>
+          )}
+          {seedParam && (
+            <p className="mb-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 px-4 py-2 font-sport text-[11px] font-black uppercase tracking-widest text-amber-200">
+              Mismo bombo · código {seedParam}
+            </p>
+          )}
           <div className="card-gradient rounded-3xl p-6 mb-6">
             <h3 className="font-display font-bold text-lg mb-4">{t('draft.elegiTuFormacion', 'Elegí tu formación')}</h3>
             <div className="flex gap-2 justify-center flex-wrap">
@@ -705,6 +732,10 @@ function DraftInner() {
           {(playersError || squadsError) && (
             <p className="mt-3 text-xs text-red-400">No se pudo cargar la base: {playersError || squadsError}. Recargá la página.</p>
           )}
+          <CopiarDesafio
+            href={`https://gambetafutbol.games/draft/?mode=${encodeURIComponent(modeId)}&seed=${encodeURIComponent(seedParaChat)}${retoId ? `&reto=${encodeURIComponent(retoId)}` : ''}${clubId ? `&club=${encodeURIComponent(clubId)}` : ''}&utm_source=desafio&utm_medium=chat&utm_campaign=mismo_bombo`}
+            className="mt-5"
+          />
           <Link href="/" className="block mt-6 text-slate-400 hover:text-white transition-colors text-xs font-bold font-sport uppercase tracking-wider inline-block py-2.5 px-3">{t('draft.volverAlInicio2', 'Volver al inicio')}</Link>
         </motion.div>
 

@@ -158,6 +158,8 @@ export const EVENTOS = {
   rankingVisto: "ranking_visto",
   sugerenciaEnviada: "sugerencia_enviada",
   donacionClick: "donacion_click",
+  avisoReto: "aviso_reto",
+  instalarApp: "instalar_app",
   /**
    * Publicidad. Va con `resultado` (visto · descartado · sin-aviso) y `donde`.
    *

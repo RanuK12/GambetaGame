@@ -5,6 +5,8 @@ import Link from "next/link"
 import { challengeForDate, challengeNumber, localYmd, msUntilNextDay } from "@/lib/daily-challenge"
 import { loadDaily, completadoHoy, bonusForStreak } from "@/lib/daily-progress"
 import { useReto } from "@/lib/i18n"
+import VolverManana from "@/components/VolverManana"
+import CopiarDesafio from "@/components/CopiarDesafio"
 
 /**
  * El reto de hoy, arriba de todo en el home.
@@ -110,6 +112,11 @@ export default function DailyCard() {
               >
                 Cómo suma al ranking
               </Link>
+              <CopiarDesafio
+                href={`https://gambetafutbol.games/draft/?mode=clasico&reto=${reto.id}&utm_source=desafio&utm_medium=chat&utm_campaign=reto_diario`}
+                className="mt-1"
+              />
+              {hecho && <VolverManana />}
             </div>
           </div>
         </div>

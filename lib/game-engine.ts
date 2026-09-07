@@ -897,8 +897,8 @@ const esEstrella = (p: Player) => Boolean(p.legendary) || (p.rating || 0) >= STA
 export const HISTORICO_CHANCE = 0.25;
 
 /** Sorteo uniforme. Existe para tener un solo lugar donde se elige al azar de una lista. */
-function sorteoUniforme(lista: Squad[]): Squad {
-  return lista[Math.floor(Math.random() * lista.length)];
+function sorteoUniforme(lista: Squad[], azar: () => number = Math.random): Squad {
+  return lista[Math.floor(azar() * lista.length)];
 }
 
 /** ¿Este plantel tiene una estrella libre que pueda jugar en el puesto pedido? */
@@ -919,6 +919,7 @@ export function spinSquadWithPity(
   pity: { consecutiveLow: number; pityActive: boolean; spinsSinEstrella?: number },
   slot?: { position: string; drafted: Set<string> },
   clubesUsados?: Set<string>,
+  azar: () => number = Math.random,
 ): Squad {
   if (eligible.length === 0) throw new Error('No eligible squads');
   if (eligible.length === 1) return eligible[0];
@@ -950,12 +951,12 @@ export function spinSquadWithPity(
   if (garantizada) eligible = conEstrella;
 
   const historicos = eligible.filter(sq => sq.historico);
-  if (historicos.length > 0 && historicos.length < eligible.length && Math.random() < HISTORICO_CHANCE) {
+  if (historicos.length > 0 && historicos.length < eligible.length && azar() < HISTORICO_CHANCE) {
     // Si el puesto pide algo que ningún histórico puede cubrir, no se fuerza: se sigue de largo.
     const utiles = slot
       ? historicos.filter(sq => allPlayers.some(p => sq.playerIds.includes(p.id) && !slot.drafted.has(p.id) && canPlayHere(p, slot.position)))
       : historicos;
-    if (utiles.length > 0) return sorteoUniforme(utiles);
+    if (utiles.length > 0) return sorteoUniforme(utiles, azar);
   }
 
   // Si el cupo no salió, el giro se juega SOLO entre los actuales. Si los históricos siguieran en
@@ -964,10 +965,10 @@ export function spinSquadWithPity(
   const actuales = eligible.filter(sq => !sq.historico);
   if (actuales.length > 0) eligible = actuales;
 
-  if (garantizada) return sorteoUniforme(eligible);
-  if (slot && conEstrella.length > 0 && Math.random() < STAR_BASE_CHANCE) {
+  if (garantizada) return sorteoUniforme(eligible, azar);
+  if (slot && conEstrella.length > 0 && azar() < STAR_BASE_CHANCE) {
     const vigentes = conEstrella.filter(sq => eligible.includes(sq));
-    return sorteoUniforme(vigentes.length > 0 ? vigentes : conEstrella);
+    return sorteoUniforme(vigentes.length > 0 ? vigentes : conEstrella, azar);
   }
 
   // Compute avg squad rating for each eligible squad
@@ -983,20 +984,20 @@ export function spinSquadWithPity(
     const goodSquads = withRating.filter(x => x.avg >= 68);
     if (goodSquads.length > 0) {
       // 65% chance to pick from good squads
-      if (Math.random() < 0.65) {
-        return sorteoUniforme(goodSquads.map(x => x.sq));
+      if (azar() < 0.65) {
+        return sorteoUniforme(goodSquads.map(x => x.sq), azar);
       }
     }
   } else if (pity.consecutiveLow === 1) {
     // 1 consecutive low → 30% chance to get a decent squad
     const decentSquads = withRating.filter(x => x.avg >= 62);
-    if (decentSquads.length > 0 && Math.random() < 0.30) {
-      return sorteoUniforme(decentSquads.map(x => x.sq));
+    if (decentSquads.length > 0 && azar() < 0.30) {
+      return sorteoUniforme(decentSquads.map(x => x.sq), azar);
     }
   }
 
   // Normal random pick
-  return sorteoUniforme(eligible);
+  return sorteoUniforme(eligible, azar);
 }
 
 /** Update pity state after a player is picked */

@@ -24,7 +24,7 @@ import { execFileSync } from 'node:child_process'
 const ROOT = process.cwd()
 const SALIDA = path.join(ROOT, 'data', 'reports', 'portales')
 const CARPETA = path.join(SALIDA, 'itchio')
-const SITIO = 'https://gambetafutbol.games/?utm_source=itchio&utm_medium=portal&utm_campaign=alta'
+const SITIO = 'https://gambetafutbol.games/play/?utm_source=itchio&utm_medium=portal&utm_campaign=alta'
 
 const INDEX = `<!doctype html>
 <html lang="es">
