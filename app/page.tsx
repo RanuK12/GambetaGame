@@ -435,6 +435,9 @@ function HeroSection() {
           >
             {t('hero.tituloB', 'EQUIPO SOÑADO')}
           </span>
+          <span className="block mt-2 font-sport font-bold text-[11px] sm:text-sm tracking-[0.25em] text-[#9CCBF0]/80">
+            {t('hero.tituloC', 'DE FÚTBOL ARGENTINO')}
+          </span>
         </h1>
 
         <p className="text-slate-300/90 text-base sm:text-xl max-w-2xl mx-auto mb-7 sm:mb-10 leading-relaxed font-sans font-medium">
