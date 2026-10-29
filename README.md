@@ -198,7 +198,6 @@ MIT License - Ver [LICENSE](LICENSE)
 **Emilio Ranucoli**
 - GitHub: [@RanuK12](https://github.com/RanuK12)
 - Web: [ranuk.dev](https://ranuk.dev)
-- Email: ranucoliemilio@gmail.com
 - LinkedIn: [Emilio Ranucoli](https://linkedin.com/in/emilio-ranucoli)
 
 ---
